@@ -1,0 +1,41 @@
+- name: tap additional brew repositories
+  homebrew_tap: tap={{ item }} state=present
+  with_items:
+    - threadwaste/finto
+- name: brew update and cleanup
+  shell: brew update && brew cleanup
+- name: install essentials
+  homebrew:
+    state: latest
+    name:
+    - coreutils
+    - amazon-ecs-cli
+    - awscli
+    - curl
+    - finto
+    - glide
+    - go
+    - gotags
+    - jenkins-job-builder
+    - jq
+    - nmap
+    - openssl
+    - packer
+    - rbenv
+    - rbenv-gemset
+    - reattach-to-user-namespace
+    - ssh-copy-id
+    - the_silver_searcher
+    - terraform
+    - tmux
+    - tree
+    - watch
+    - wget
+    - wrk
+- name: check for iTerm
+  stat:
+    path: /Applications/iTerm.app
+  register: iterm_check
+- name: install iTerm
+  homebrew_cask: name=iterm2 state=present
+  when: iterm_check.stat.exists == False
